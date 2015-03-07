@@ -14,7 +14,7 @@ public class ListenerService extends WearableListenerService {
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         showToast(messageEvent.getPath());
-        Log.d("GOT MSG", "ANROID PHONE");
+        //Log.d("GOT MSG", "ANROID PHONE");
     }
 
     private void showToast(String message) {

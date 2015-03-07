@@ -41,7 +41,7 @@ public class MainActivity extends ActionBarActivity {
         SoundsList = (ListView)findViewById(R.id.listView);
         SoundNames = new ArrayList<>();
         context=getApplicationContext();
-
+        ListenerService ls = new ListenerService();
 
         //create our client and get our soundObjects list
         //Client client = new Client();
