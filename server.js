@@ -56,5 +56,5 @@ MongoClient.connect('mongodb://localhost:27017/sounds', function(err, db) {
 				res.writeHead(400, {'Content-Type': 'application/json'});
 				res.end('{error: \'bad page number\'}');
 			}
-		}).listen(1337, '127.0.0.1');
+		}).listen(1337);
 });
