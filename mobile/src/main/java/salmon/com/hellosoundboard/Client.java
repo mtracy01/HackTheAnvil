@@ -97,10 +97,10 @@ public class Client {
                 //return ""; // An error of some sort occurred
             }*/
 
-            /*JsonReader reader = new JsonReader(new InputStreamReader(response.getEntity().getContent(),"UTF-8"));
+            JsonReader reader = new JsonReader(new InputStreamReader(response.getEntity().getContent(),"UTF-8"));
             List ret = readMessagesArray(reader);
-            return ret;*/
-            return null;
+            return ret;
+            //return null;
             //return inputStreamToString(response.getEntity().getContent());
         } catch (IOException e) {
             e.printStackTrace();

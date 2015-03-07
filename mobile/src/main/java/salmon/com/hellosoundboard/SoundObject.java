@@ -12,4 +12,6 @@ public class SoundObject{
         this.name=name;
         this.url=url;
     }
+    public String getName(){return name;}
+    public String getUrl(){return url;}
 }

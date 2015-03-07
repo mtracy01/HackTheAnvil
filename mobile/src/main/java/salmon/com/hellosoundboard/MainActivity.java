@@ -1,5 +1,6 @@
 package salmon.com.hellosoundboard;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
@@ -26,12 +27,15 @@ public class MainActivity extends ActionBarActivity {
     private ListView             SoundsList;    //UI for our list of sounds
     private List                 SoundObjects;  //List of JSONObjects
     private ArrayList<String>    SoundNames;    //String names of sounds
+    private Context             context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) throws java.lang.IllegalMonitorStateException{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         SoundsList = (ListView)findViewById(R.id.listView);
+        SoundNames = new ArrayList<>();
+        context=getApplicationContext();
 
         //create our client and get our soundObjects list
         //Client client = new Client();
@@ -46,21 +50,20 @@ public class MainActivity extends ActionBarActivity {
             protected void onPostExecute(Integer integer) {
                 if(SoundObjects==null){
                     //Toast toast= Toast.makeText(this,"Server Error")
+                    Log.e(TAG,"Null SoundObjects returned");
                     return;
                 }
                 int size = SoundObjects.size();
+                Log.v(TAG,"SIZE= " + size);
                 for(int i=0;i<size;i++){
-                    JSONObject temp = (JSONObject)SoundObjects.get(i);
-                    String name=null;
-                    try{
-                        name = temp.getString("name");
-                    }
-                    catch(JSONException e) {
-                        e.printStackTrace();
-                        continue;
-                    }
+                    SoundObject temp = (SoundObject)SoundObjects.get(i);
+                    String name;
+                    name = temp.getName();
+                    Log.v(TAG,name);
                     SoundNames.add(name);
                 }
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, SoundNames);
+                SoundsList.setAdapter(adapter);
             }
         };
         getTask.execute();
@@ -71,10 +74,11 @@ public class MainActivity extends ActionBarActivity {
             e.printStackTrace();
             Log.v(TAG,"Interrupt exception!");
         }*/
-        if(SoundNames!=null) {
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, SoundNames);
-            SoundsList.setAdapter(adapter);
-        }
+        /*if(SoundNames!=null) {
+            Log.e(TAG,"TRUE");
+
+        }*/
+
 
 
     }
