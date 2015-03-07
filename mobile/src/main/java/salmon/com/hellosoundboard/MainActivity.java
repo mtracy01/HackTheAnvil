@@ -4,14 +4,25 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
 
+    private ListView SoundsList;    //UI for our list of sounds
+    private List SoundObjects;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SoundsList = (ListView)findViewById(R.id.listView);
+
+        //create our client and get our soundObjects list
+        Client client = new Client();
+        SoundObjects=client.getPage(1);
+
     }
 
 

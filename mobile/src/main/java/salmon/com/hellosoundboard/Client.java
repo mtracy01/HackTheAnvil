@@ -132,7 +132,7 @@ public class Client {
     }
 
 
-    private List getPage(int i){
+    public List getPage(int i){
         String command = "" + i;
         List response = executeServerCommand(command);
         return response;
