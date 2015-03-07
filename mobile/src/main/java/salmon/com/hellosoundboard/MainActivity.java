@@ -32,7 +32,8 @@ public class MainActivity extends ActionBarActivity {
     private ListView             SoundsList;    //UI for our list of sounds
     private List                 SoundObjects;  //List of JSONObjects
     private ArrayList<String>    SoundNames;    //String names of sounds
-    private Context             context;
+    public static Context             context;
+    public static SoundObject soundObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) throws java.lang.IllegalMonitorStateException{
@@ -42,7 +43,6 @@ public class MainActivity extends ActionBarActivity {
         SoundNames = new ArrayList<>();
         context=getApplicationContext();
         ListenerService ls = new ListenerService();
-
         //create our client and get our soundObjects list
         //Client client = new Client();
         AsyncTask<Void, Void, Integer> getTask = new AsyncTask<Void, Void, Integer>() {
@@ -74,39 +74,7 @@ public class MainActivity extends ActionBarActivity {
                 SoundsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        try {
-
-                            final MediaPlayer player = new MediaPlayer();
-                            Log.e(TAG,"Before setting stream type");
-                            player.reset();
-
-                            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                            Log.e(TAG, "After setting stream type");
-                            SoundObject soundObject = (SoundObject)SoundObjects.get(position);
-                            Log.e(TAG,soundObject.getUrl());
-
-                            Uri uri = Uri.parse("http://" + soundObject.getUrl());
-                            Log.e(TAG,"Before set data");
-                            player.setDataSource(context,uri);
-                            Log.e(TAG,"After set data");
-                            //player.prepare();
-                            Log.e(TAG,"Before setting listener");
-                            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                                @Override
-                                public void onPrepared(MediaPlayer mp) {
-                                    Log.e(TAG, "READY");
-                                    mp.start();
-                                }
-                            });
-                            Log.e(TAG,"AFter setting listener");
-                            player.prepare();
-                            Log.e(TAG,"After prepare");
-
-
-                        } catch (Exception e) {
-                            Log.e(TAG,"Failed to play sound!");
-                            e.printStackTrace();
-                        }
+                        soundObject = (SoundObject)SoundObjects.get(position);
                     }
                 });
 
@@ -151,4 +119,30 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    public static void playSound(){
+            try {
+
+                final MediaPlayer player = new MediaPlayer();
+                player.reset();
+
+                player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                //Log.e(TAG,soundObject.getUrl());
+
+                Uri uri = Uri.parse("http://" + MainActivity.soundObject.getUrl());
+                player.setDataSource(MainActivity.context,uri);
+                //player.prepare();
+                player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                        mp.start();
+                    }
+                });
+                player.prepare();
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
 }
