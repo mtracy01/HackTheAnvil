@@ -4,19 +4,31 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
 
-    private ListView SoundsList;    //UI for our list of sounds
-    private List SoundObjects;
+    //Debug log tag
+    private final String TAG = "MainActivity";
+
+    private ListView             SoundsList;    //UI for our list of sounds
+    private List                 SoundObjects;  //List of JSONObjects
+    private ArrayList<String>    SoundNames;    //String names of sounds
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) throws java.lang.IllegalMonitorStateException{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         SoundsList = (ListView)findViewById(R.id.listView);
@@ -32,26 +44,37 @@ public class MainActivity extends ActionBarActivity {
             }
             @Override
             protected void onPostExecute(Integer integer) {
-                /*if(check==1){
-                    Intent intent = new Intent(LoginActivity.this,StudentActivity.class);
-                    intent.putExtra("user",email);
-                    startActivity(intent);
+                if(SoundObjects==null){
+                    //Toast toast= Toast.makeText(this,"Server Error")
+                    return;
                 }
-                else if(check==2){
-                    Intent intent = new Intent(LoginActivity.this,AdminActivity.class);
-                    intent.putExtra("user",email);
-                    startActivity(intent);
+                int size = SoundObjects.size();
+                for(int i=0;i<size;i++){
+                    JSONObject temp = (JSONObject)SoundObjects.get(i);
+                    String name=null;
+                    try{
+                        name = temp.getString("name");
+                    }
+                    catch(JSONException e) {
+                        e.printStackTrace();
+                        continue;
+                    }
+                    SoundNames.add(name);
                 }
-                else{
-                    mEmailView.setError("Invalid username or password");
-                    mEmailView.requestFocus();
-                }
-            }*/
             }
         };
         getTask.execute();
+        /*try{
+            wait(5000);     //wait 5 seconds for the synchronous task to execute
+        }
+        catch(InterruptedException e){
+            e.printStackTrace();
+            Log.v(TAG,"Interrupt exception!");
+        }*/
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,SoundNames);
+        SoundsList.setAdapter(adapter);
 
-        
+
 
     }
 

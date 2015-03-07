@@ -6,16 +6,20 @@ import android.util.JsonToken;
 import android.util.Log;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.ConnectException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -31,7 +35,7 @@ public class Client {
 
     private static final String GETSOUNDS = "GETSOUNDS";
     private static final int CONNECTION_TIMEOUT = 10000; // 10 seconds
-    private static final String API_ENDPOINT_URL = "http://tracy94.com:80/?page=";
+    private static final String API_ENDPOINT_URL = "http://tracy94.com:2048/";
 
 
     public Client(){
@@ -39,8 +43,8 @@ public class Client {
 
     private HttpClient initClient(){
         HttpClient client = new DefaultHttpClient();
-        HttpConnectionParams.setConnectionTimeout(client.getParams(), CONNECTION_TIMEOUT);
-        HttpConnectionParams.setConnectionTimeout(client.getParams(), CONNECTION_TIMEOUT);
+        //HttpConnectionParams.setConnectionTimeout(client.getParams(), CONNECTION_TIMEOUT);
+        //HttpConnectionParams.setConnectionTimeout(client.getParams(), CONNECTION_TIMEOUT);
         return client;
     }
 
@@ -74,13 +78,15 @@ public class Client {
      * @return The server's response, or an empty string if the response could not be retrieved
      */
     private List executeServerCommand(String command) {
-        HttpClient client = initClient();
-        HttpPost request = new HttpPost();
+        HttpClient client = new DefaultHttpClient();//initClient();
+        HttpPost request = new HttpPost("tracy94.com:2048");
 
         try {
             Log.v(TAG, "Executing command: " + command);
-            request.setURI(new URI(API_ENDPOINT_URL));
-            request.setEntity(new StringEntity(command, "UTF-8"));
+            //request.setURI(new URI(API_ENDPOINT_URL));
+            List<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("page","1"));
+            request.setEntity(new UrlEncodedFormEntity(pairs));
 
             HttpResponse response = client.execute(request);
 
@@ -92,13 +98,16 @@ public class Client {
             List ret = readMessagesArray(reader);
             return ret;
             //return inputStreamToString(response.getEntity().getContent());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return null;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        } catch (Exception e){
+            e.printStackTrace();
+            Log.e(TAG,"Connection refused!");
+            return null;
         }
+
+
     }
 
     public List readMessagesArray(JsonReader reader) throws IOException {
@@ -133,7 +142,7 @@ public class Client {
 
 
     public List getPage(int i){
-        String command = "" + i;
+        String command = "POST page=1";
         List response = executeServerCommand(command);
         return response;
     }
