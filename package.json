@@ -1,6 +1,7 @@
 {
 	"name": "server",
 	"dependencies": {
-		"cheerio": ">= 0.0.0"
+		"cheerio": ">= 0.0.0",
+		"mongodb": ">= 0.0.0"
 	}
 }
