@@ -1,5 +1,7 @@
 package salmon.com.hellosoundboard;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,8 +22,36 @@ public class MainActivity extends ActionBarActivity {
         SoundsList = (ListView)findViewById(R.id.listView);
 
         //create our client and get our soundObjects list
-        Client client = new Client();
-        SoundObjects=client.getPage(1);
+        //Client client = new Client();
+        AsyncTask<Void, Void, Integer> getTask = new AsyncTask<Void, Void, Integer>() {
+            @Override
+            protected Integer doInBackground(Void... params) {
+                Client client = new Client();
+                SoundObjects=client.getPage(1);
+                return 1;
+            }
+            @Override
+            protected void onPostExecute(Integer integer) {
+                /*if(check==1){
+                    Intent intent = new Intent(LoginActivity.this,StudentActivity.class);
+                    intent.putExtra("user",email);
+                    startActivity(intent);
+                }
+                else if(check==2){
+                    Intent intent = new Intent(LoginActivity.this,AdminActivity.class);
+                    intent.putExtra("user",email);
+                    startActivity(intent);
+                }
+                else{
+                    mEmailView.setError("Invalid username or password");
+                    mEmailView.requestFocus();
+                }
+            }*/
+            }
+        };
+        getTask.execute();
+
+        
 
     }
 
