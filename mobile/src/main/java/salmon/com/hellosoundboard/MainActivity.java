@@ -17,11 +17,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -48,8 +50,30 @@ public class MainActivity extends ActionBarActivity {
         AsyncTask<Void, Void, Integer> getTask = new AsyncTask<Void, Void, Integer>() {
             @Override
             protected Integer doInBackground(Void... params) {
+                /*
                 Client client = new Client();
                 SoundObjects=client.getPage(1);
+                */
+                List<SoundObject> sounds = new ArrayList<SoundObject>();
+                Scanner in = new Scanner(getResources().openRawResource(R.raw.sounds));
+                in.useDelimiter("\\Z");
+                String json = in.next();
+                in.close();
+                try {
+                    JSONArray arr = new JSONArray(json);
+                    for(int i = 0; i < arr.length(); i++) {
+                        JSONObject obj = arr.getJSONObject(i);
+                        String name = obj.getString("name"),
+                                url = obj.getString("url");
+                        SoundObject sObj = new SoundObject(name, url);
+                        sounds.add(sObj);
+                    }
+                } catch(JSONException e) {
+                    e.printStackTrace();
+                }
+                SoundObjects = sounds;
+
+
                 return 1;
             }
             @Override
