@@ -79,13 +79,13 @@ public class MainActivity extends ActionBarActivity {
                             final MediaPlayer player = new MediaPlayer();
                             Log.e(TAG,"Before setting stream type");
                             player.reset();
-                           
+
                             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                             Log.e(TAG, "After setting stream type");
                             SoundObject soundObject = (SoundObject)SoundObjects.get(position);
                             Log.e(TAG,soundObject.getUrl());
 
-                            Uri uri = Uri.parse(soundObject.getUrl());
+                            Uri uri = Uri.parse("http://" + soundObject.getUrl());
                             Log.e(TAG,"Before set data");
                             player.setDataSource(context,uri);
                             Log.e(TAG,"After set data");
@@ -105,6 +105,7 @@ public class MainActivity extends ActionBarActivity {
 
                         } catch (Exception e) {
                             Log.e(TAG,"Failed to play sound!");
+                            e.printStackTrace();
                         }
                     }
                 });
