@@ -59,9 +59,6 @@ public class MainActivity extends Activity {
                             button.setImageResource(R.drawable.btn_red_up);
                             down = false;
                         }
-                        //sendMessage(getNodes());
-                        //send();
-                        //getNodes();
                         send();
                         return true;
                     }
@@ -70,33 +67,6 @@ public class MainActivity extends Activity {
         });
 
     }
-
-    private void sendMessage(String nodeId) {
-        Wearable.MessageApi.sendMessage(
-                client, nodeId, PLAY_SOUND, new byte[0]).setResultCallback(
-                new ResultCallback<MessageApi.SendMessageResult>() {
-                    @Override
-                    public void onResult(MessageApi.SendMessageResult sendMessageResult) {
-                        if (!sendMessageResult.getStatus().isSuccess()) {
-                            Log.e(TAG, "Failed to send message with status code: "
-                                    + sendMessageResult.getStatus().getStatusCode());
-                        }
-                    }
-                }
-        );
-    }
-
-    private Collection<String> getNodes() {
-        HashSet<String> results = new HashSet<String>();
-        NodeApi.GetConnectedNodesResult nodes =
-                Wearable.NodeApi.getConnectedNodes(client).await();
-        for (Node node : nodes.getNodes()) {
-            results.add(node.getId());
-            Log.d("FOUND: " + node.getId(),TAG);
-        }
-        return results;
-    }
-
 
     //** Method 2**/
     private GoogleApiClient getGoogleApiClient(Context context) {
