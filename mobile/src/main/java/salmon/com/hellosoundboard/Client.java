@@ -9,6 +9,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -35,7 +36,7 @@ public class Client {
 
     private static final String GETSOUNDS = "GETSOUNDS";
     private static final int CONNECTION_TIMEOUT = 10000; // 10 seconds
-    private static final String API_ENDPOINT_URL = "http://tracy94.com:2048/";
+    private static final String API_ENDPOINT_URL = "http://tracy94.com:2048/?page=1";
 
 
     public Client(){
@@ -79,24 +80,27 @@ public class Client {
      */
     private List executeServerCommand(String command) {
         HttpClient client = new DefaultHttpClient();//initClient();
-        HttpPost request = new HttpPost("tracy94.com:2048");
+        HttpGet request = new HttpGet();
 
         try {
             Log.v(TAG, "Executing command: " + command);
             //request.setURI(new URI(API_ENDPOINT_URL));
-            List<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("page","1"));
-            request.setEntity(new UrlEncodedFormEntity(pairs));
 
+
+            //request.setEntity(new UrlEncodedFormEntity(pairs));
+            request.setURI(new URI(API_ENDPOINT_URL));
             HttpResponse response = client.execute(request);
 
-            if(response.getStatusLine().getStatusCode() != 200) {
-                //return ""; // An error of some sort occurred
-            }
+            // ;
 
-            JsonReader reader = new JsonReader(new InputStreamReader(response.getEntity().getContent(),"UTF-8"));
+            /*if(response.getStatusLine().getStatusCode() != 200) {
+                //return ""; // An error of some sort occurred
+            }*/
+
+            /*JsonReader reader = new JsonReader(new InputStreamReader(response.getEntity().getContent(),"UTF-8"));
             List ret = readMessagesArray(reader);
-            return ret;
+            return ret;*/
+            return null;
             //return inputStreamToString(response.getEntity().getContent());
         } catch (IOException e) {
             e.printStackTrace();

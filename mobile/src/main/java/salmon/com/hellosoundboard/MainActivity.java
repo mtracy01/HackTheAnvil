@@ -71,9 +71,10 @@ public class MainActivity extends ActionBarActivity {
             e.printStackTrace();
             Log.v(TAG,"Interrupt exception!");
         }*/
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,SoundNames);
-        SoundsList.setAdapter(adapter);
-
+        if(SoundNames!=null) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, SoundNames);
+            SoundsList.setAdapter(adapter);
+        }
 
 
     }
