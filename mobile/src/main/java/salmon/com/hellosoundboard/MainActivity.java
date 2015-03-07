@@ -2,12 +2,17 @@ package salmon.com.hellosoundboard;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -37,6 +42,7 @@ public class MainActivity extends ActionBarActivity {
         SoundNames = new ArrayList<>();
         context=getApplicationContext();
 
+
         //create our client and get our soundObjects list
         //Client client = new Client();
         AsyncTask<Void, Void, Integer> getTask = new AsyncTask<Void, Void, Integer>() {
@@ -64,6 +70,45 @@ public class MainActivity extends ActionBarActivity {
                 }
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, SoundNames);
                 SoundsList.setAdapter(adapter);
+
+                SoundsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        try {
+
+                            final MediaPlayer player = new MediaPlayer();
+                            Log.e(TAG,"Before setting stream type");
+                            player.reset();
+                           
+                            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                            Log.e(TAG, "After setting stream type");
+                            SoundObject soundObject = (SoundObject)SoundObjects.get(position);
+                            Log.e(TAG,soundObject.getUrl());
+
+                            Uri uri = Uri.parse(soundObject.getUrl());
+                            Log.e(TAG,"Before set data");
+                            player.setDataSource(context,uri);
+                            Log.e(TAG,"After set data");
+                            //player.prepare();
+                            Log.e(TAG,"Before setting listener");
+                            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                @Override
+                                public void onPrepared(MediaPlayer mp) {
+                                    Log.e(TAG, "READY");
+                                    mp.start();
+                                }
+                            });
+                            Log.e(TAG,"AFter setting listener");
+                            player.prepare();
+                            Log.e(TAG,"After prepare");
+
+
+                        } catch (Exception e) {
+                            Log.e(TAG,"Failed to play sound!");
+                        }
+                    }
+                });
+
             }
         };
         getTask.execute();
